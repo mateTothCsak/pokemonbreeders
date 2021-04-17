@@ -1,6 +1,6 @@
 package net.tcsm.pokemonbreeders.controller;
 
-import net.tcsm.pokemonbreeders.dto.EggGroupConnection;
+import net.tcsm.pokemonbreeders.dto.EggGroupNode;
 import net.tcsm.pokemonbreeders.dto.PokemonEggGroup;
 import net.tcsm.pokemonbreeders.service.PokemonEggGroupsService;
 import net.tcsm.pokemonbreeders.util.EggGroupConnector;
@@ -33,7 +33,7 @@ public class TestController {
     }
 
     @GetMapping(path = "connect")
-    public List<EggGroupConnection> findConnections(){
-        return connector.generateEggGroupConnections();
+    public List<EggGroupNode> findConnections(){
+        return connector.getEggGroupNodes();
     }
 }

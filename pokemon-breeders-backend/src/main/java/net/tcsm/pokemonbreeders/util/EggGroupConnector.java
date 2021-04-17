@@ -1,7 +1,9 @@
 package net.tcsm.pokemonbreeders.util;
 
 import net.tcsm.pokemonbreeders.dto.EggGroupConnection;
+import net.tcsm.pokemonbreeders.dto.EggGroupNode;
 import net.tcsm.pokemonbreeders.dto.PokemonEggGroup;
+import net.tcsm.pokemonbreeders.service.EggGroupConnectionService;
 import net.tcsm.pokemonbreeders.service.PokemonEggGroupsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,14 +18,15 @@ public class EggGroupConnector {
     @Autowired
     private PokemonEggGroupsService eggGroupsService;
 
-    public List<EggGroupConnection> generateEggGroupConnections(){
-        List<EggGroupConnection> connections = new ArrayList<>();
-        int numOfEggGroups = eggGroupsService.findMaxEggGroupId().intValue();
-        for(int groupID = 1; groupID <= numOfEggGroups; groupID++) {
-            List<Long> connectedGroups = getConnectedGroups((long) groupID);
-            connections.add(new EggGroupConnection((long) groupID, connectedGroups));
+    @Autowired
+    private EggGroupConnectionService eggGroupConnectionService;
+
+    public void generateEggGroupConnections(){
+        long numOfEggGroups = eggGroupsService.findMaxEggGroupId();
+        for(long groupID = 1; groupID <= numOfEggGroups; groupID++) {
+            List<Long> connectedGroups = getConnectedGroups(groupID);
+            eggGroupConnectionService.createConnections(groupID, connectedGroups);
         }
-        return connections;
     }
 
     private List<Long> getConnectedGroups(Long groupID) {
@@ -38,4 +41,16 @@ public class EggGroupConnector {
                 .collect(Collectors.toList());
     }
 
+    public List<EggGroupNode> getEggGroupNodes() {
+        List<EggGroupNode> nodes = new ArrayList<>();
+        long numOfEggGroups = eggGroupsService.findMaxEggGroupId();
+        for (long groupID = 1; groupID <= numOfEggGroups; groupID++) {
+            List<Long> connectedGroupIDs = eggGroupConnectionService.findByGroupID(groupID)
+                    .stream()
+                    .map(EggGroupConnection::getConnectedGroupID)
+                    .collect(Collectors.toList());
+            nodes.add(new EggGroupNode(groupID, connectedGroupIDs));
+        }
+        return nodes;
+    }
 }
