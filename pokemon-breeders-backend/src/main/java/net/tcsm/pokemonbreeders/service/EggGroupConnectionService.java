@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
 import static net.tcsm.pokemonbreeders.mapper.EggGroupConnectionMapper.eggGroupConnectionMapper;
 
 @Transactional
@@ -17,19 +18,26 @@ public class EggGroupConnectionService {
 
     @Autowired
     private EggGroupConnectionRepository repository;
-    
+
     public void createConnections(Long groupID, List<Long> connectedGroups) {
         connectedGroups.forEach(connectedGroup -> save(groupID, connectedGroup));
     }
 
     public void save(Long groupID, Long connectedGroupID) {
-        if(repository.findEggGroupConnectionByGroupIDAndConnectedGroupID(groupID, connectedGroupID).isEmpty()) {
+        if (repository.findEggGroupConnectionByGroupIDAndConnectedGroupID(groupID, connectedGroupID).isEmpty()) {
             repository.save(new EggGroupConnectionEntity(groupID, connectedGroupID));
         }
     }
 
 
-    public List<EggGroupConnection> findByGroupID(Long groupID){
+    public List<EggGroupConnection> findByGroupID(Long groupID) {
         return eggGroupConnectionMapper.toDtoList(repository.findEggGroupConnectionsByGroupID(groupID));
+    }
+
+    public List<Long> getConnectedGroupIDs(Long groupID) {
+        return findByGroupID(groupID)
+                .stream()
+                .map(EggGroupConnection::getConnectedGroupID)
+                .collect(toList());
     }
 }

@@ -8,9 +8,14 @@ import net.tcsm.pokemonbreeders.service.PokemonEggGroupsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+
+
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Component
 public class EggGroupConnector {
@@ -38,7 +43,7 @@ public class EggGroupConnector {
                 .map(PokemonEggGroup::getEggGroupID)
                 .filter(eggGroupID -> !eggGroupID.equals(groupID))
                 .distinct()
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     public List<EggGroupNode> getEggGroupNodes() {
@@ -48,9 +53,14 @@ public class EggGroupConnector {
             List<Long> connectedGroupIDs = eggGroupConnectionService.findByGroupID(groupID)
                     .stream()
                     .map(EggGroupConnection::getConnectedGroupID)
-                    .collect(Collectors.toList());
+                    .collect(toList());
             nodes.add(new EggGroupNode(groupID, connectedGroupIDs));
         }
         return nodes;
     }
+
+    public void searchFastestPath(Long fromGroupID, Long toGroupID){
+
+    }
+
 }

@@ -3,6 +3,7 @@ package net.tcsm.pokemonbreeders.controller;
 import net.tcsm.pokemonbreeders.dto.EggGroupNode;
 import net.tcsm.pokemonbreeders.dto.PokemonEggGroup;
 import net.tcsm.pokemonbreeders.service.PokemonEggGroupsService;
+import net.tcsm.pokemonbreeders.util.BreedingPathSearcher;
 import net.tcsm.pokemonbreeders.util.EggGroupConnector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,5 +36,11 @@ public class TestController {
     @GetMapping(path = "connect")
     public List<EggGroupNode> findConnections(){
         return connector.getEggGroupNodes();
+    }
+
+    @GetMapping(path = "paths")
+    public List<List<Long>> findPaths(@RequestParam Long from, @RequestParam Long to){
+        BreedingPathSearcher searcher = new BreedingPathSearcher(from, to, connector.getEggGroupNodes());
+        return searcher.searchFastestPath();
     }
 }
