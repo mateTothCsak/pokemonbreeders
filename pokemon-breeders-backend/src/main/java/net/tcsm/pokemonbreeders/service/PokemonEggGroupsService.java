@@ -20,7 +20,6 @@ public class PokemonEggGroupsService {
     private PokemonEggGroupsRepository repository;
 
     public List<PokemonEggGroup> findBySpeciesID(Long speciesID) {
-
         return repository.findBySpeciesID(speciesID)
                 .stream()
                 .map(pokemonEggGroupMapper::toDto)
@@ -37,4 +36,5 @@ public class PokemonEggGroupsService {
                 .map(pokemonEggGroupMapper::toDto)
                 .collect(Collectors.toList());
     }
+
 }

@@ -27,7 +27,7 @@ public class BreedingPathSearcher {
         List<Long> visitedNodes = new ArrayList<>();
         visitedNodes.add(startGroupID);
 
-        if(starterNode.getConnectedGroups().contains(resultGroupID)){
+        if(startGroupID.equals(resultGroupID) || starterNode.getConnectedGroups().contains(resultGroupID)){
             visitedNodes.add(resultGroupID);
             resultPaths.add(visitedNodes);
             return resultPaths;
