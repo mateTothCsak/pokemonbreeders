@@ -23,6 +23,15 @@ public class BreedingPathUtils {
     @Autowired
     private PokemonSpeciesNamesSerivce pokemonSpeciesNamesSerivce;
 
+    private Object createSearchResponseObject(Long fromSpeciesID, Long toSpeciesID){
+        //fromSpeciedID = fromSpeciesID;
+        //toSpeciesID = toSpeciesID
+        //numberOfBreedingSteps (list(0).length)
+        //numberOfBreedingPaths (list.length)
+        //breeding paths -
+        return null;
+    }
+
     public List<List<Long>> findBreedingPathFromSpecies(Long from, Long to){
         List<PokemonEggGroup> fromGroups = eggGroupsService.findBySpeciesID(from);
         List<PokemonEggGroup> toGroups = eggGroupsService.findBySpeciesID(to);
