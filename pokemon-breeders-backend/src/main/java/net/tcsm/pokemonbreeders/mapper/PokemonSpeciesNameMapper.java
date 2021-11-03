@@ -1,7 +1,5 @@
 package net.tcsm.pokemonbreeders.mapper;
-import net.tcsm.pokemonbreeders.dto.PokemonEggGroup;
 import net.tcsm.pokemonbreeders.dto.PokemonSpeciesName;
-import net.tcsm.pokemonbreeders.model.PokemonEggGroupEntity;
 import net.tcsm.pokemonbreeders.model.PokemonSpeciesNameEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

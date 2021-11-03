@@ -11,7 +11,8 @@ export class PokemonService {
 
   constructor(private http: HttpClient) { }
 
-  private maxResultsURL = "http://localhost:8080/test/max";
+  private maxResultsURL = "http://localhost:8080/pokemon/max";
+  private englishNamesURL = "http://localhost:8080/pokemon/english-names";
 
   public getNumberOfEgggroups() {
     return this.http.get(this.maxResultsURL, {responseType: 'text'})
@@ -22,4 +23,15 @@ export class PokemonService {
         )
       );
   }
+
+  public getAllPokemonEnglishNames() {
+    return this.http.get(this.maxResultsURL, {responseType: 'text'})
+      .pipe(
+        tap(
+          data => console.log(data),
+          error => console.log(error)
+        )
+      );
+  }
+
 }

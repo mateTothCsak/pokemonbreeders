@@ -2,7 +2,10 @@ package net.tcsm.pokemonbreeders.controller;
 
 import net.tcsm.pokemonbreeders.dto.EggGroupNode;
 import net.tcsm.pokemonbreeders.dto.PokemonEggGroup;
+import net.tcsm.pokemonbreeders.dto.PokemonNameSearchDTO;
 import net.tcsm.pokemonbreeders.service.PokemonEggGroupsService;
+import net.tcsm.pokemonbreeders.service.PokemonService;
+import net.tcsm.pokemonbreeders.service.PokemonSpeciesNamesSerivce;
 import net.tcsm.pokemonbreeders.util.BreedingPathSearcher;
 import net.tcsm.pokemonbreeders.util.BreedingPathUtils;
 import net.tcsm.pokemonbreeders.util.EggGroupConnector;
@@ -13,17 +16,14 @@ import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
-@RequestMapping("/test")
-public class TestController {
+@RequestMapping("/pokemon")
+public class PokemonController {
 
-    @Autowired
-    private PokemonEggGroupsService service;
+    private final PokemonService service;
 
-    @Autowired
-    private EggGroupConnector connector;
-
-    @Autowired
-    private BreedingPathUtils breedingPathUtils;
+    public PokemonController(PokemonService service) {
+        this.service = service;
+    }
 
     @GetMapping
     public List<PokemonEggGroup> getEggGroup(@RequestParam Long speciesID) {
@@ -44,8 +44,8 @@ public class TestController {
      * @return lit of EggGroupNodes, containing information about which egg group is connected to which other
      */
     @GetMapping(path = "connect")
-    public List<EggGroupNode> findConnections() {
-        return connector.getEggGroupNodes();
+    public List<EggGroupNode> findEggGroupConnections() {
+        return service.findConnections();
     }
 
     /**
@@ -56,21 +56,27 @@ public class TestController {
      * @return list of paths, containing the steps for breeding
      */
     @GetMapping(path = "paths")
-    public List<List<Long>> findPaths(@RequestParam Long from, @RequestParam Long to) {
-        BreedingPathSearcher searcher = new BreedingPathSearcher(from, to, connector.getEggGroupNodes());
-        return searcher.searchFastestPath();
+    public List<List<Long>> findBreedingPaths(@RequestParam Long from, @RequestParam Long to) {
+        return service.searchFastestPath(from, to);
     }
 
     @GetMapping(path = "species-path")
-    public List<List<Long>> findPathsBySpecies(@RequestParam Long from, @RequestParam Long to) {
-        return breedingPathUtils.findBreedingPathFromSpecies(from, to);
+    public List<List<Long>> findBreedingPathsBySpecies(@RequestParam Long from, @RequestParam Long to) {
+        return service.findBreedingPathsBySpecies(from, to);
     }
 
-    //TODO breeding path should show egg-grpups first decleration first
-    //TODO create a response with: starting Pokemon (/eg group?) and all steps should contain their egg group
-    //TODO names should be coming from pokemon_csv's where default is 1
     @GetMapping(path = "species-names-path")
-    public List<List<List<String>>> findPathsWithNamesBySpecies(@RequestParam Long from, @RequestParam Long to) {
-        return breedingPathUtils.getSpeciesNamesByBreedingPath(breedingPathUtils.findBreedingPathFromSpecies(from, to));
+    public List<List<List<String>>> findBreedingPathsWithNamesBySpecies(@RequestParam Long from, @RequestParam Long to) {
+        return service.findBreedingPathsWithNamesBySpecies(from, to);
+    }
+
+    @GetMapping("english-names")
+    public List<String> getEnglishPokemonNames(){
+        return service.getEnglishPokemonNames();
+    }
+
+    @GetMapping("name-search-data")
+    public List<PokemonNameSearchDTO> getPokemonNameSearchDTOs(@RequestParam Long languageID){
+        return service.getPokemonNameSearchDTOs(languageID);
     }
 }
