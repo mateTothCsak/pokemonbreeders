@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
 import { PokemonService } from '../pokemon.service';
+import { PokemonNameSearchDTO } from './pokemon-name-search-dto';
 
 @Component({
   selector: 'app-pokemon-picker',
@@ -12,25 +13,43 @@ export class PokemonPickerComponent implements OnInit {
 
   IMAGE_URL: string = "https://img.pokemondb.net/sprites/home/normal/";
   IMAGE_EXTENSION: string = ".png";
+  startingPokemon : PokemonNameSearchDTO | undefined;
+  resultPokemon : PokemonNameSearchDTO | undefined;
   numberOfEggGroups$: string = "0";
-  pokemons: string[] = ["charmander", "squirtle", "bulbasaur"];
-  pokemonLinks$: string[] = [];
+  pokemons: PokemonNameSearchDTO[] = [];
+  
+  //pokemonLinks$: string[] = [];
 
   ngOnInit(): void {
+    this.getSearchResultDTOs();
     this.getNumberOfEggGroups();
-    this.updatePokemonLinks();
   }
   
   private getNumberOfEggGroups(): void {
     this.pokemonService.getNumberOfEgggroups().subscribe(response => this.numberOfEggGroups$ = response);
   }
 
-  private updatePokemonLinks(): void {
-    console.log("hello");
-    for(let pokemon of this.pokemons){
-        console.log(pokemon);
-        this.pokemonLinks$.push(this.IMAGE_URL + pokemon + this.IMAGE_EXTENSION);
-    }
+  private getSearchResultDTOs(): void {
+    this.pokemonService.getNameSearchDTOs().subscribe(response => {
+        this.pokemons = response.pokemons;
+        this.startingPokemon = response.pokemons[0];
+        this.resultPokemon = response.pokemons[0];
+    });
+  }
+
+  public click(){
+    console.log(this.startingPokemon);
+    console.log(this.resultPokemon);
   }
 
 }
+
+
+
+
+
+      /*for (var pokemon of response.pokemons){
+        this.pokemons.push(pokemon);
+        console.log(pokemon);
+        this.pokemonLinks$.push(this.IMAGE_URL + pokemon.identifierName + this.IMAGE_EXTENSION);
+      }*/

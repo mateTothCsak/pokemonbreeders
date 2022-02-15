@@ -2,14 +2,8 @@ package net.tcsm.pokemonbreeders.controller;
 
 import net.tcsm.pokemonbreeders.dto.EggGroupNode;
 import net.tcsm.pokemonbreeders.dto.PokemonEggGroup;
-import net.tcsm.pokemonbreeders.dto.PokemonNameSearchDTO;
-import net.tcsm.pokemonbreeders.service.PokemonEggGroupsService;
+import net.tcsm.pokemonbreeders.dto.PokemonNameSearchResponse;
 import net.tcsm.pokemonbreeders.service.PokemonService;
-import net.tcsm.pokemonbreeders.service.PokemonSpeciesNamesSerivce;
-import net.tcsm.pokemonbreeders.util.BreedingPathSearcher;
-import net.tcsm.pokemonbreeders.util.BreedingPathUtils;
-import net.tcsm.pokemonbreeders.util.EggGroupConnector;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -76,7 +70,7 @@ public class PokemonController {
     }
 
     @GetMapping("name-search-data")
-    public List<PokemonNameSearchDTO> getPokemonNameSearchDTOs(@RequestParam Long languageID){
+    public PokemonNameSearchResponse getPokemonNameSearchDTOs(@RequestParam Long languageID){
         return service.getPokemonNameSearchDTOs(languageID);
     }
 }

@@ -5,12 +5,12 @@ public class PokemonNameSearchDTO {
     private String name;
     private Long id;
     private String genus;
-    private String identitifierName;
+    private String identifierName;
 
-    public PokemonNameSearchDTO(String name, Long id, String genus, String identitifierName) {
+    public PokemonNameSearchDTO(String name, Long id, String genus, String identifierName) {
         this.name = name;
         this.id = id;
-        this.identitifierName = identitifierName;
+        this.identifierName = identifierName;
         this.genus = genus;
     }
 
@@ -30,12 +30,12 @@ public class PokemonNameSearchDTO {
         this.id = id;
     }
 
-    public String getIdentitifierName() {
-        return identitifierName;
+    public String getIdentifierName() {
+        return identifierName;
     }
 
-    public void setIdentitifierName(String identitifierName) {
-        this.identitifierName = identitifierName;
+    public void setIdentifierName(String identifierName) {
+        this.identifierName = identifierName;
     }
 
     public String getGenus() {
