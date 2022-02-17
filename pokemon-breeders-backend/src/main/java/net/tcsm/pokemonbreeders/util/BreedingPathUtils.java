@@ -23,18 +23,15 @@ public class BreedingPathUtils {
     @Autowired
     private PokemonSpeciesNamesSerivce pokemonSpeciesNamesSerivce;
 
-    private Object createSearchResponseObject(Long fromSpeciesID, Long toSpeciesID){
-        //fromSpeciedID = fromSpeciesID;
-        //toSpeciesID = toSpeciesID
-        //numberOfBreedingSteps (list(0).length)
-        //numberOfBreedingPaths (list.length)
-        //breeding paths -
-        return null;
-    }
-
-    public List<List<Long>> findBreedingPathFromSpecies(Long from, Long to){
-        List<PokemonEggGroup> fromGroups = eggGroupsService.findBySpeciesID(from);
-        List<PokemonEggGroup> toGroups = eggGroupsService.findBySpeciesID(to);
+    /**
+     * Calculates the breeding path (= consequent egg group id's) from two species id-s
+     *
+     * @param fromGroups pokemonEggroups belonging to the starting Pokemon (example: 1 = bulbasaur, 4 = charmander)
+     * @param toGroups pokemonEggroups belonging to the result Pokemon
+     * @return A list of all possible fastest breeding paths -> egg group id-s
+     */
+    //TODO for 2.0 -> save breeding path to db so maybe it will result in lower complexity?
+    public List<List<Long>> findBreedingPathFromSpecies(List<PokemonEggGroup> fromGroups, List<PokemonEggGroup> toGroups ){
         int minLength = Integer.MAX_VALUE;
         List<List<Long>> resultPaths = new ArrayList<>();
         for(PokemonEggGroup fromGroup : fromGroups){
@@ -54,9 +51,14 @@ public class BreedingPathUtils {
         return resultPaths;
     }
 
+    /**
+     * After a breeding path is calculated, it is converted to contain species id-s instead of egg group ids-s
+     * @param breedingPath
+     * @return
+     */
     public List<List<List<Long>>> getSpeciesByBreedingPath(List<List<Long>> breedingPath) {
         List<List<List<Long>>> species = new ArrayList<>();
-        for(List<Long> path : breedingPath){
+        for(List<Long> path : breedingPath){ //TODO if breeding path is 2 long it means they can directly breed (eg: [1, 1]) or it can be [1, 7 too]
             List<List<Long>> pathSpecies = new ArrayList<>();
             for(int i = 0; i < path.size()-1; i++){
                 List<Long> firstGroupSpecies = eggGroupsService.findByEggGroupID(path.get(i))
@@ -77,10 +79,14 @@ public class BreedingPathUtils {
         return species;
     }
 
+    /**
+     * rework this method to return objects instead of this
+     * @param breedingPath
+     * @return
+     */
     public List<List<List<String>>> getSpeciesNamesByBreedingPath(List<List<Long>> breedingPath) {
         List<List<List<Long>>> species = getSpeciesByBreedingPath(breedingPath);
         List<List<List<String>>> speciesNames = new ArrayList<>();
-
         for(List<List<Long>> types : species){
             List<List<String>> typeNames = new ArrayList<>();
             for(List<Long> type : types) {
@@ -92,6 +98,21 @@ public class BreedingPathUtils {
             speciesNames.add(typeNames);
         }
         return speciesNames;
+    }
+
+
+    /**
+     * Util method for easier path lookup.
+     * Likely to be deleted once the proper breeding path response mechanism is built.
+     *
+     * @param fromSpeciesID
+     * @param toSpeciesID
+     * @return A list of all possible fastest breeding paths -> egg group id-s
+     */
+    public List<List<Long>> findBreedingPathBySpeciesIDs(Long fromSpeciesID, Long toSpeciesID){
+        List<PokemonEggGroup> fromGroups = eggGroupsService.findBySpeciesID(fromSpeciesID);
+        List<PokemonEggGroup> toGroups = eggGroupsService.findBySpeciesID(toSpeciesID);
+        return findBreedingPathFromSpecies(fromGroups, toGroups);
     }
 /*
     public String getSpeciesNamesByBreedingPath(List<List<Long>> breedingPath) {

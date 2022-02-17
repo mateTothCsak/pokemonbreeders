@@ -1,17 +1,21 @@
 package net.tcsm.pokemonbreeders.dto;
 
-public class PokemonNameSearchDTO {
+import java.util.List;
+
+public class PokemonDTO {
 
     private String name;
     private Long id;
     private String genus;
     private String identifierName;
+    private List<String> eggGroups;
 
-    public PokemonNameSearchDTO(String name, Long id, String genus, String identifierName) {
+    public PokemonDTO(String name, Long id, String genus, String identifierName, List<String> eggGroups) {
         this.name = name;
         this.id = id;
         this.identifierName = identifierName;
         this.genus = genus;
+        this.eggGroups = eggGroups;
     }
 
     public String getName() {
@@ -44,5 +48,13 @@ public class PokemonNameSearchDTO {
 
     public void setGenus(String genus) {
         this.genus = genus;
+    }
+
+    public List<String> getEggGroups() {
+        return eggGroups;
+    }
+
+    public void setEggGroups(List<String> eggGroups) {
+        this.eggGroups = eggGroups;
     }
 }

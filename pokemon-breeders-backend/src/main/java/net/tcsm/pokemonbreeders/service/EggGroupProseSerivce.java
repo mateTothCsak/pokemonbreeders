@@ -1,8 +1,6 @@
 package net.tcsm.pokemonbreeders.service;
 
-import net.tcsm.pokemonbreeders.model.EggGroupProseEntity;
 import net.tcsm.pokemonbreeders.repository.EggGroupProseRepository;
-import net.tcsm.pokemonbreeders.repository.PokemonSpeciesNameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,4 +15,8 @@ public class EggGroupProseSerivce {
     public String getEnglishName(Long eggGroupID) {
         return repository.findByEggGroupIDAndLocalLanguageID(eggGroupID, englishLanguageID).getName();
     }
+
+    public Long getEggGroupIDByEnglishName(String englishName){
+        return repository.findByNameAndLocalLanguageID(englishName, englishLanguageID).getEggGroupID();
+    };
 }

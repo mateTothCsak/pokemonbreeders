@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface EggGroupProseRepository extends JpaRepository<EggGroupProseEntity, Long> {
 
     EggGroupProseEntity findByEggGroupIDAndLocalLanguageID(Long eggGroupID, Long localLanguageID);
-
+    EggGroupProseEntity findByNameAndLocalLanguageID(String name, Long localLanguageID);
 }

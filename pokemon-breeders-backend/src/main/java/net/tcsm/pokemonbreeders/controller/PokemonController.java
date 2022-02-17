@@ -21,7 +21,7 @@ public class PokemonController {
 
     @GetMapping
     public List<PokemonEggGroup> getEggGroup(@RequestParam Long speciesID) {
-        return service.findBySpeciesID(speciesID);
+        return service.findEggGroupBySpeciesID(speciesID);
     }
 
     /**
@@ -45,18 +45,19 @@ public class PokemonController {
     /**
      * Shows the breeding path from one egg group to another
      *
-     * @param from starting egg group id
+     *
+     * @param from starting egg group id (example - 1 = monster, 2 = water1 etc)
      * @param to   destination egg group id
      * @return list of paths, containing the steps for breeding
      */
-    @GetMapping(path = "paths")
-    public List<List<Long>> findBreedingPaths(@RequestParam Long from, @RequestParam Long to) {
+    @GetMapping(path = "egg-group-path")
+    public List<List<Long>> findEggGroupPaths(@RequestParam Long from, @RequestParam Long to) {
         return service.searchFastestPath(from, to);
     }
 
     @GetMapping(path = "species-path")
     public List<List<Long>> findBreedingPathsBySpecies(@RequestParam Long from, @RequestParam Long to) {
-        return service.findBreedingPathsBySpecies(from, to);
+        return service.findBreedingPathBySpeciesIDs(from, to);
     }
 
     @GetMapping(path = "species-names-path")
@@ -69,6 +70,7 @@ public class PokemonController {
         return service.getEnglishPokemonNames();
     }
 
+    //TODO delete test endpoint
     @GetMapping("name-search-data")
     public PokemonNameSearchResponse getPokemonNameSearchDTOs(@RequestParam Long languageID){
         return service.getPokemonNameSearchDTOs(languageID);

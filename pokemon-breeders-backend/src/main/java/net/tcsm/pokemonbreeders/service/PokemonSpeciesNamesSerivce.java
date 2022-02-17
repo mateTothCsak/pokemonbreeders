@@ -24,6 +24,10 @@ public class PokemonSpeciesNamesSerivce {
         return repository.findByPokemonSpeciesIDAndLocalLanguageID(speciesId, englishLanguageID).getName();
     }
 
+    public String getGenus(Long speciesId) {
+        return repository.findByPokemonSpeciesIDAndLocalLanguageID(speciesId, englishLanguageID).getGenus();
+    }
+
     public List<String> getAllEnglishNames(){
         return repository.findAllByLocalLanguageID(englishLanguageID)
                 .stream()

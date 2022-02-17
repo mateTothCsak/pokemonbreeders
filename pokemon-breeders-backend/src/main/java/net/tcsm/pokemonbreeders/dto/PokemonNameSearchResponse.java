@@ -4,17 +4,17 @@ import java.util.List;
 
 public class PokemonNameSearchResponse {
 
-    private List<PokemonNameSearchDTO> pokemons;
+    private List<PokemonDTO> pokemons;
 
-    public PokemonNameSearchResponse(List<PokemonNameSearchDTO> pokemons) {
+    public PokemonNameSearchResponse(List<PokemonDTO> pokemons) {
         this.pokemons = pokemons;
     }
 
-    public List<PokemonNameSearchDTO> getPokemons() {
+    public List<PokemonDTO> getPokemons() {
         return pokemons;
     }
 
-    public void setPokemons(List<PokemonNameSearchDTO> pokemons) {
+    public void setPokemons(List<PokemonDTO> pokemons) {
         this.pokemons = pokemons;
     }
 }

@@ -9,7 +9,7 @@ import static net.tcsm.pokemonbreeders.mapper.PokemonDataMapper.pokemonDataMappe
 
 
 @Service
-public class PokemonDataSerivce {
+public class PokemonDataService {
 
     private static final Long englishLanguageID = 9L;
 
