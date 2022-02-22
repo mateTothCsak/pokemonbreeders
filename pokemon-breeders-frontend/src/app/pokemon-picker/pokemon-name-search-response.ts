@@ -1,12 +1,12 @@
-import { PokemonNameSearchDTO } from "./pokemon-name-search-dto";
+import { PokemonDTO } from "../dto/pokemon-dto";
 
 export class PokemonNameSearchResponse {
 
-    constructor(pokemons : PokemonNameSearchDTO[]){
+    constructor(pokemons : PokemonDTO[]){
         this.pokemons = pokemons;
      }
  
-     pokemons : PokemonNameSearchDTO[] = [];
+     pokemons : PokemonDTO[] = [];
     
 }
  

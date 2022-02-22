@@ -53,6 +53,14 @@ public class BreedingPathUtils {
 
     /**
      * After a breeding path is calculated, it is converted to contain species id-s instead of egg group ids-s
+     *
+     * [ - container for all paths
+     *   [ - one path
+     *      [1,2,3] - path steps with species IDs
+     *      [3,4,1]
+     *   ]
+     * ]
+     *
      * @param breedingPath
      * @return
      */

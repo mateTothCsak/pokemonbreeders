@@ -1,6 +1,7 @@
 package net.tcsm.pokemonbreeders.controller;
 
 import net.tcsm.pokemonbreeders.dto.EggGroupNode;
+import net.tcsm.pokemonbreeders.dto.PokemonBreedingResponse;
 import net.tcsm.pokemonbreeders.dto.PokemonEggGroup;
 import net.tcsm.pokemonbreeders.dto.PokemonNameSearchResponse;
 import net.tcsm.pokemonbreeders.service.PokemonService;
@@ -74,5 +75,10 @@ public class PokemonController {
     @GetMapping("name-search-data")
     public PokemonNameSearchResponse getPokemonNameSearchDTOs(@RequestParam Long languageID){
         return service.getPokemonNameSearchDTOs(languageID);
+    }
+
+    @GetMapping("breeding-path")
+    public PokemonBreedingResponse getPokemonBreedingPath(@RequestParam Long fromSpeciesID, @RequestParam Long toSpeciesID){
+        return service.getBreedingPath(fromSpeciesID, toSpeciesID);
     }
 }

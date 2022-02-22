@@ -1,6 +1,9 @@
 import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
 import { PokemonService } from '../pokemon.service';
-import { PokemonNameSearchDTO } from './pokemon-name-search-dto';
+import { PokemonDTO } from '../dto/pokemon-dto';
+import { BreedingPathDTO } from '../dto/breeding-path-dto';
+import { BreedingResponse } from '../dto/breeding-response';
+import { BreedingPathStatus } from '../dto/breeding-path-status';
 
 @Component({
   selector: 'app-pokemon-picker',
@@ -11,13 +14,15 @@ export class PokemonPickerComponent implements OnInit {
 
   constructor(private pokemonService: PokemonService) {}
 
+  pokemons: PokemonDTO[] = [];
   IMAGE_URL: string = "https://img.pokemondb.net/sprites/home/normal/";
   IMAGE_EXTENSION: string = ".png";
-  startingPokemon : PokemonNameSearchDTO | undefined;
-  resultPokemon : PokemonNameSearchDTO | undefined;
-  numberOfEggGroups$: string = "0";
-  pokemons: PokemonNameSearchDTO[] = [];
-  
+  startingPokemon? : PokemonDTO;
+  resultPokemon? : PokemonDTO;
+  numberOfEggGroups: string = "0";
+  breedingPath?: BreedingResponse;
+  breedingPathStatus = BreedingPathStatus;
+
   //pokemonLinks$: string[] = [];
 
   ngOnInit(): void {
@@ -26,21 +31,32 @@ export class PokemonPickerComponent implements OnInit {
   }
   
   private getNumberOfEggGroups(): void {
-    this.pokemonService.getNumberOfEgggroups().subscribe(response => this.numberOfEggGroups$ = response);
+    this.pokemonService.getNumberOfEgggroups().subscribe(response => this.numberOfEggGroups = response);
   }
 
   private getSearchResultDTOs(): void {
-    this.pokemonService.getNameSearchDTOs().subscribe(response => {
+    this.pokemonService.getNameSearchDTOs().subscribe(response => { //TODO rename getPokemons
         this.pokemons = response.pokemons;
-        this.startingPokemon = response.pokemons[0];
-        this.resultPokemon = response.pokemons[0];
+        this.startingPokemon = this.pokemons[0];
+        this.resultPokemon = this.pokemons[0];
     });
   }
 
   public click(){
     console.log(this.startingPokemon);
     console.log(this.resultPokemon);
+    if(this.startingPokemon && this.resultPokemon){
+      this.pokemonService.getBreedingPaths(this.startingPokemon.id, this.resultPokemon.id).subscribe(response => {
+        this.breedingPath = response;
+        console.log(response);
+      });
+    }
+    //else show error window (?) 
   }
+
+  public click2(){
+      console.log(this.breedingPath);
+    }
 
 }
 

@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "egg_group_prose_entity")
+@Table(name = "egg_group_prose_csv")
 public class EggGroupProseEntity {
 
     @Id

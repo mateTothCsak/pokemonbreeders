@@ -5,6 +5,7 @@ public class PokemonBreedingResponse {
     PokemonDTO startingPokemon;
     PokemonDTO resultPokemon;
     BreedingPathStatus pathStatus;
+    BreedingPathDTO breedingPath;
 
     public BreedingPathStatus getPathStatus() {
         return pathStatus;
@@ -28,5 +29,13 @@ public class PokemonBreedingResponse {
 
     public void setResultPokemon(PokemonDTO resultPokemon) {
         this.resultPokemon = resultPokemon;
+    }
+
+    public BreedingPathDTO getBreedingPath() {
+        return breedingPath;
+    }
+
+    public void setBreedingPath(BreedingPathDTO breedingPath) {
+        this.breedingPath = breedingPath;
     }
 }

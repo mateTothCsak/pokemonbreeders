@@ -7,6 +7,7 @@ import net.tcsm.pokemonbreeders.util.EggGroupConnector;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -129,21 +130,26 @@ public class PokemonService {
         List<PokemonEggGroup> fromGroups = eggGroupsService.findBySpeciesID(fromSpeciesID);
         List<PokemonEggGroup> toGroups = eggGroupsService.findBySpeciesID(toSpeciesID);
 
-        boolean isPokemonsHaveCommonEggGroup = fromGroups.stream().anyMatch(group -> toGroups.contains(group));
+        boolean isPokemonsHaveCommonEggGroup = !CollectionUtils.isEmpty(fromGroups.stream().filter(group -> {
+                                            return toGroups.stream()
+                                                        .map(PokemonEggGroup::getEggGroupID)
+                                                        .collect(Collectors.toList())
+                                                        .contains(group.getEggGroupID());
+                                        }).collect(Collectors.toList()));
 
         if(isPokemonsHaveCommonEggGroup){
             response.setPathStatus(BreedingPathStatus.DIRECTLY_BREEDABLE);
             return response;
         }
 
-        List<List<Long>> breedingPath = breedingPathUtils.findBreedingPathFromSpecies(fromGroups, toGroups);
-        if(CollectionUtils.isEmpty(breedingPath)){
+        List<List<Long>> rawBreedingPath = breedingPathUtils.findBreedingPathFromSpecies(fromGroups, toGroups);
+        if(CollectionUtils.isEmpty(rawBreedingPath)){
             response.setPathStatus(BreedingPathStatus.NON_BREEDABLE);
             return response;
         }
 
-        List<List<List<Long>>> breedingPathSpeciesIDs = breedingPathUtils.getSpeciesByBreedingPath(breedingPath);
-        //TODO next step is to format breeding steps and add to response.
+        BreedingPathDTO breedingPath = getBreedingPathObjectFromRawBreedingPath(rawBreedingPath);
+        response.setBreedingPath(breedingPath);
         response.setPathStatus(BreedingPathStatus.MULTISTEP_BREEDABLE);
         return response;
     }
@@ -158,5 +164,53 @@ public class PokemonService {
                 .map(pokemonEggGroup -> eggGroupProseSerivce.getEnglishName(pokemonEggGroup.getEggGroupID()))
                 .collect(Collectors.toList());
         return new PokemonDTO(name, speciesID, genus, identifier, eggGroups);
+    }
+
+
+    /**
+     *
+     * This should put together the JSONized breeding paths
+     *
+     * [ - container for all paths
+     *   [ - one path
+     *      [1,2,3] - path steps with species IDs
+     *      [3,4,1]
+     *   ]
+     * ]
+     *
+     * @param breedingPathEggGroupIDs
+     * @return
+     */
+    public BreedingPathDTO getBreedingPathObjectFromRawBreedingPath(List<List<Long>> breedingPathEggGroupIDs) {
+        List<BreedingPathInstanceDTO> breedingPaths = new ArrayList<>();
+        for(List<Long> path : breedingPathEggGroupIDs){
+            List<BreedingStepDTO> breedingSteps = new ArrayList<>();
+            for(int i = 0; i < path.size()-1; i++){
+                BreedingStepDTO breedingStep = new BreedingStepDTO();
+                breedingStep.setStartingEggGroupName(eggGroupProseSerivce.getEnglishName(path.get(i)));
+                breedingStep.setResultEggGroupName(eggGroupProseSerivce.getEnglishName(path.get(i+1)));
+
+                List<Long> firstGroupSpecies = eggGroupsService.findByEggGroupID(path.get(i))
+                        .stream()
+                        .map(PokemonEggGroup::getSpeciesID)
+                        .collect(Collectors.toList());
+                List<Long> secondGroupSpecies = eggGroupsService.findByEggGroupID(path.get(i+1))
+                        .stream()
+                        .map(PokemonEggGroup::getSpeciesID)
+                        .collect(Collectors.toList());
+                List<PokemonDTO> common = firstGroupSpecies.stream()
+                        .filter(secondGroupSpecies::contains)
+                        .map(this::getPokemonFromSpeciesID)
+                        .collect(Collectors.toList());
+                breedingStep.setPokemonsAtCurrentStep(common);
+                breedingSteps.add(breedingStep);
+            }
+            BreedingPathInstanceDTO breedingPath = new BreedingPathInstanceDTO();
+            breedingPath.setStartingEggGroupName(eggGroupProseSerivce.getEnglishName(path.get(0)));
+            breedingPath.setResultEggGroupName(eggGroupProseSerivce.getEnglishName(path.get(path.size()-1)));
+            breedingPath.setBreedingSteps(breedingSteps);
+            breedingPaths.add(breedingPath);
+        }
+        return new BreedingPathDTO(breedingPaths);
     }
 }

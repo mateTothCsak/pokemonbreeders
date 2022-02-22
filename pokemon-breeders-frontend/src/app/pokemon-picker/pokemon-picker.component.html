@@ -1,5 +1,5 @@
 <p>pokemon-picker works!</p>
-<p *ngIf="numberOfEggGroups$">The number of eggsisting egg-groups: {{ numberOfEggGroups$ }}</p>
+<p *ngIf="numberOfEggGroups">The number of eggsisting egg-groups: {{ numberOfEggGroups }}</p>
 <label for="startingPokemon">Choose starting Pokémon</label>
 <select id="startingPokemon" [(ngModel)]="startingPokemon">
   <option *ngFor="let pokemon of pokemons" [ngValue]="pokemon">
@@ -15,3 +15,6 @@
 </select>
 <img src="{{ IMAGE_URL + resultPokemon?.identifierName + IMAGE_EXTENSION }}"> 
 <button (click)="click()">Show me breeding path</button>
+<button (click)="click2()">Show me breeding pat2</button>
+<p *ngIf="breedingPath">There is a breeding path available :O ;)</p>
+<p *ngIf="breedingPath && breedingPath.pathStatus === breedingPathStatus.DIRECTLY_BREEDABLE"> DIRECTLY BREEDABLE!!!!!</p>
